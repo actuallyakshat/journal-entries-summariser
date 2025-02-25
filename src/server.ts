@@ -20,6 +20,11 @@ const limiter = rateLimit({
 const API_KEY = process.env.API_SECRET;
 
 app.use((req: Request, res: Response, next: Function) => {
+  console.log("LOG: REQUEST @", new Date(Date.now()));
+
+  console.log("REQUEST METHOD AND URL :", req.method, req.url);
+  console.log("HEADER KEY: ", req.headers["x-api-key"]);
+
   const providedKey = req.headers["x-api-key"];
   if (providedKey === API_KEY) {
     next();
@@ -73,5 +78,6 @@ app.post("/api/summary", async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
+  console.log("API KEY: ", API_KEY);
   console.log(`Server is running at http://localhost:${port}`);
 });
