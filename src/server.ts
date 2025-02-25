@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const rateLimit = require("express-rate-limit");
 const GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
 dotenv.config();
 
@@ -11,11 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 app.set("trust proxy", true);
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 10 requests per windowMs
-});
 
 const API_KEY = process.env.API_SECRET;
 
@@ -32,8 +26,6 @@ app.use((req: Request, res: Response, next: Function) => {
     res.status(403).send("Forbidden");
   }
 });
-
-app.use(limiter);
 
 const port = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_KEY;
