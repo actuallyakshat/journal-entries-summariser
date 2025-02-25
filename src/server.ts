@@ -10,10 +10,24 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
+app.set("trust proxy", true);
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 10 requests per windowMs
 });
+
+const API_KEY = process.env.API_SECRET;
+
+app.use((req: Request, res: Response, next: Function) => {
+  const providedKey = req.headers["x-api-key"];
+  if (providedKey === API_KEY) {
+    next();
+  } else {
+    res.status(403).send("Forbidden");
+  }
+});
+
 app.use(limiter);
 
 const port = process.env.PORT || 3000;
